@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2学期期末テスト｜試験範囲</title>
+<style>
+:root{--bg:#f3f5f8;--panel:#fff;--ink:#182230;--muted:#697586;--line:#e5e9ef;--accent:#315f9b;--soft:#eaf1fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:#172b43;color:white;padding:30px max(20px,calc((100% - 980px)/2)) 26px}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:#b8c9dd}h1{font-size:clamp(24px,5vw,36px);margin:8px 0 6px}.sub{color:#c8d5e4;font-size:14px}
+main{max-width:980px;margin:24px auto;padding:0 16px 60px}
+.progressbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:18px}
+.progressrow{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}.bar{height:7px;background:#edf0f4;border-radius:9px;margin-top:10px;overflow:hidden}.fill{height:100%;width:0;background:var(--accent);transition:width .2s}
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}
+.daybtn{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:12px 6px;color:var(--ink);cursor:pointer;font:inherit}
+.daybtn strong{display:block;font-size:14px}.daybtn span{font-size:12px;color:var(--muted)}.daybtn.active{background:var(--accent);border-color:var(--accent);color:white}.daybtn.active span{color:#dce8f7}
+.day{display:none}.day.active{display:block}.dayhead{display:flex;align-items:end;justify-content:space-between;margin:22px 2px 12px}.dayhead h2{font-size:23px;margin:0}.dayhead p{font-size:13px;color:var(--muted);margin:0}
+.subjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0}
+.cardtop{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}
+.card h3{font-size:18px;margin:0}.tag{font-size:11px;color:var(--accent);background:var(--soft);padding:5px 9px;border-radius:20px}
+.submit-tag{font-size:11px;font-weight:700;color:#9a4d13;background:#fff0df;border:1px solid #f2d0a9;padding:4px 8px;border-radius:6px;white-space:nowrap}
+.submit-card{border:1px solid var(--line);background:var(--panel)}
+.submit-mark{display:inline-block;margin-left:7px;padding:2px 6px;border-radius:5px;background:#fff0df;color:#9a4d13;border:1px solid #f2d0a9;font-size:10px;font-weight:700;vertical-align:1px;white-space:nowrap}
+.item.is-submit{background:#fffaf3;border-radius:7px;padding-left:7px;padding-right:7px}
+.exercise-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+.exercise-grid .item{padding:7px 4px}
+.exercise-note{font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.6}
+@media(max-width:420px){.exercise-grid{grid-template-columns:1fr}}
+.item{display:grid;grid-template-columns:20px 1fr;gap:9px;padding:8px 0;border-bottom:1px solid #f0f2f5;font-size:14px;line-height:1.55}.item:last-child{border:0}
+.item input{margin:4px 0 0;accent-color:var(--accent);width:16px;height:16px}.detail{color:var(--muted);font-size:12px;display:block}
+.item:has(input:checked) .book{text-decoration:line-through;color:#8a95a3}
+.empty{color:var(--muted);font-size:13px}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:26px}
+@media(max-width:620px){.days{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.daybtn{padding:10px 2px}.daybtn strong{font-size:12px}.daybtn span{font-size:10px}.subjects{grid-template-columns:1fr}.dayhead h2{font-size:20px}}
+</style></head>
+<body>
+<header><div class="eyebrow">EXAM SCHEDULE / STUDY GUIDE</div><h1>2学期期末テスト</h1><div class="sub">日程別の試験範囲 · 提出物だけをオレンジで表示 · チェックで進捗管理</div></header>
+<main>
+<section class="progressbox"><div class="progressrow"><strong>提出物の進行度</strong><span id="count">0 / 0 完了</span></div><div class="bar"><div class="fill" id="fill"></div></div></section>
+<nav class="days" aria-label="試験日">
+<button class="daybtn active" data-day="0"><strong>1日目</strong><span>火曜</span></button>
+<button class="daybtn" data-day="1"><strong>2日目</strong><span>水曜</span></button>
+<button class="daybtn" data-day="2"><strong>3日目</strong><span>木曜</span></button>
+<button class="daybtn" data-day="3"><strong>4日目</strong><span>金曜</span></button>
+<button class="daybtn" data-day="4"><strong>5日目</strong><span>月曜</span></button>
+</nav>
+<div id="days"></div>
+<footer>提出物のみオレンジで表示。数学の演習対象問題は問題ごとにチェック可能。チェック状態はこのブラウザに保存される。</footer>
+</main>
+<script>
+const exams = [
+{day:"1日目",weekday:"火曜",subjects:[
+{name:"M1",items:[["教科書 数Ⅱ","P.114～155"],["サクシード 数Ⅱ+B+C","P.62～79","演習対象問題をやろう"]],exercises:["424","430 (2)","432 (1)","435 (1)(2)","436 (1)(2)(3)","437 (1)","443 (2)(3)","446 (1)(4)","447 (2)(3)","448 (2)(3)","449 (1)(2)","450 (1)(2)","451 (1)(2)","454 (1)","455","456 (1)","457 (1)","458","459 (1)(2)","462 (2)","463 (2)(4)","465 (1)(2)(3)(4)","466 (1)(2)","468 (1)","469 (1)(2)","470","471 (1)(2)(3)","473 (1)(2)","474"]},
+{name:"地理",items:[["教科書","P.135～157","地球環境問題・資源エネルギー問題"],["GEO","P.56～61"],["GEO","P.94～105"],["GEO","P.257～259"],["GEO","P.281～283"],["GEO地理ワークノート","P.1～3","アジア全域"],["要点ノート","P.38～41"],["要点ノート","P.68～73","個別の炭田・油田・鉱山名と位置は出題しない"],["振り返りシート","","やらなくていいよ"]]}
+]},
+{day:"2日目",weekday:"水曜",subjects:[
+{name:"家庭科",items:[["教科書","P.39～52"],["教科書","P.56～61"],["教科書","P.137～155"],["学習ノート","P.20～32"],["学習ノート","P.76～83"],["生活学Navi","P.24～41"],["生活学Navi","P.64～65"],["生活学Navi","P.68～77"],["プリント","No.1～11"]]},
+{name:"現代文",items:[["教科書","P.226～229","『科学と非科学』"],["教科書","P.128～135","『一人の中にある無限』"],["漢字","P.74～81"],["リテラ現代文","P.30～37","9から11","submit"]]},
+{name:"論表",items:[["アースライズ薄い方","P.24～29","Lesson 7～9 + Give It a Try!"],["アースライズ薄い方","P.64～75","Lesson 25～29 + Practical Training 4"],["アースライズ白ワーク","P.18～23","Lesson 7～9","submit"],["アースライズ白ワーク","P.48～55","Lesson 25～29","submit"],["アースライズ総合","該当する頁"],["LEAP活用ノート","pp.16～33の奇数頁","英作文ページ"],["リスニング","P.8～13","Training 4～6"],["リスニング","P.47～49"]]}
+]},
+{day:"3日目",weekday:"木曜",subjects:[
+{name:"MA",items:[["教科書 数A","P.118～145"],["教科書 数Ⅰ","P.172～201","P.194～197を除く"],["サクシード 数Ⅰ+A","P.174～199"],["サクシード 数Ⅰ+A","P.84～101","P.96～97を除く"]],exercises:["421","422","427 (1)(2)","433 (1)(3)","436","437 (1)(2)","441 (2)(3)","442 (1)(2)","450 (1)(2)","455 (2)","458","471 (1)(2)","473","474 (1)(3)","475 (2)","476 (2)(4)","477 (2)","478 (2)","481","483","484","487","488","490 (1)(3)","491","494","502","507","511 (1)～(4)","512","513","516 (1)(2)","521"]},
+{name:"生物",items:[["教科書","P.80～98"],["教科書","P.108～109"],["教科書","P.115"],["レポート","実験06","だ腺染色体の観察＋だ腺染色体レポート"],["図説「スクエア」","P.78～79"],["図説「スクエア」","P.100～101"],["図説「スクエア」","P.105"],["図説「スクエア」","P.133～138"],["図説「スクエア」","P.156～161"],["図説「スクエア」","P.164～165"],["問題集「センサー」","P.38"],["問題集「センサー」","P.40","31・32"],["問題集「センサー」","P.41","16～19"],["問題集「センサー」","P.54"],["問題集「センサー」","P.60"],["問題集「センサー」","P.64～65"],["問題集「センサー」","P.70","8のみ"],["問題集「センサー」","P.71","1～8"],["問題集「センサー」","P.73","44・45"],["問題集「センサー」","P.76～77"],["問題集「センサー」","P.78","46のみ"],["問題集「センサー」","P.84"],["問題集「センサー」","P.88～89","58のみ"],["問題集「センサー」","P.92"],["問題集「センサー」","P.174","7・8"],["問題集「センサー」","P.175","9のみ"]]}
+]},
+{day:"4日目",weekday:"金曜",subjects:[
+{name:"歴史",items:[["教科書","P.64～81"],["ワークノート","P.48～61","","submit"]]},
+{name:"英コミ",items:[["エレメント","P.102～103","Lesson 7 Scene 1～4"],["エレメント","P.114","Lesson 8 Scene 1～2"],["エレメント","P.168","Speed Reading Lesson 7"],["ワークシート","2枚","Lesson 7と8"],["LEAP","P.170～207","No.506～649"],["LEAP活用ノート","pp.16～33の偶数頁","語彙問題ページ"],["ビューポイント","P.10～15","Lesson 4～6","submit"],["授業用ノート","","Lesson 7 Scene 1～4","submit"],["授業用ノート","","Lesson 8 Scene 1～2","submit"]]},
+{name:"物理",items:[["教科書","P.90～115","仕事、力学的エネルギー"],["リードα","P.44～53","基本問題はやろう"]]}
+]},
+{day:"5日目",weekday:"月曜",subjects:[
+{name:"古典",items:[["教科書古文編","P.112～113","土佐日記『門出』"],["教科書古文編","P.116～117","土佐日記『帰京』"],["教科書漢文編","P.204～205","『雑説』"],["古典文法","P.60～61"],["古典文法","P.64～71"],["古典文法演習ノート","P.32～37"],["新明説漢文ノート","P.32～33"],["基礎古典","P.30～33","12と13"],["基礎古典","P.40～43","17と18"],["基礎古典ラーニングワーク","P.26～29","12と13","submit"],["基礎古典ラーニングワーク","P.36～39","17と18","submit"]]},
+{name:"保健",items:[["教科書","P.34～55","保健"]]}
+]}
+];
+const root=document.getElementById('days');
+exams.forEach((d,di)=>{
+ const section=document.createElement('section');section.className='day'+(di===0?' active':'');section.id='day'+di;
+ section.innerHTML=`<div class="dayhead"><h2>${d.day} <span style="color:#697586;font-size:15px;font-weight:500">${d.weekday}</span></h2><p>${d.subjects.length}科目</p></div><div class="subjects"></div>`;
+ const grid=section.querySelector('.subjects');
+ d.subjects.forEach(s=>{
+  const card=document.createElement('article');card.className='card';
+  const n=s.exercises?s.exercises.length:s.items.length;
+  card.innerHTML=`<div class="cardtop"><h3>${s.name}</h3><span class="tag">${s.exercises?'演習対象 '+n+'問':n+'項目'}</span></div>`;
+  if(s.exercises){
+   const scopeTitle=document.createElement('p');scopeTitle.className='exercise-note';scopeTitle.textContent='試験範囲（ODS記載）';card.appendChild(scopeTitle);
+   s.items.forEach((it,ii)=>{
+    const id=`exam-${di}-${s.name}-range-${ii}`;
+    const row=document.createElement('label');row.className='item';
+    row.innerHTML=`<input type="checkbox" data-id="${id}"><span><span class="book">${it[0]} ${it[1]||''}</span>${it[2]?`<span class="detail">${it[2]}</span>`:''}</span>`;
+    card.appendChild(row);
+   });
+   const note=document.createElement('p');note.className='exercise-note';note.style.marginTop='16px';note.innerHTML='演習対象問題 <span class="submit-mark">提出物</span>';card.appendChild(note);
+   const list=document.createElement('div');list.className='exercise-grid';
+   s.exercises.forEach((problem,ii)=>{const id=`exam-${di}-${s.name}-${ii}`;const row=document.createElement('label');row.className='item is-submit';row.dataset.submit='true';row.innerHTML=`<input type="checkbox" data-id="${id}" data-submit="true"><span><span class="book">${problem}</span><span class="submit-mark">提出物</span></span>`;list.appendChild(row);});card.appendChild(list);
+  }else{
+   s.items.forEach((it,ii)=>{
+    const id=`exam-${di}-${s.name}-${ii}`;
+    const row=document.createElement('label');row.className='item'+(it[3]==='submit'?' is-submit':'');
+    row.innerHTML=`<input type="checkbox" data-id="${id}" ${it[3]==='submit'?'data-submit="true"':'' }><span><span class="book">${it[0]} ${it[1]||''}</span>${it[2]?`<span class="detail">${it[2]}</span>`:''}${it[3]==='submit'?'<span class="submit-mark">提出物</span>':''}</span>`;
+    card.appendChild(row);
+   });
+  }grid.appendChild(card);
+ });root.appendChild(section);
+});
+function update(){const boxes=[...document.querySelectorAll('input[type=checkbox]')];boxes.forEach(b=>{b.checked=localStorage.getItem(b.dataset.id)==='1';});const submissions=boxes.filter(b=>b.dataset.submit==='true');const done=submissions.filter(b=>b.checked).length;document.getElementById('count').textContent=`${done} / ${submissions.length} 完了`;document.getElementById('fill').style.width=(submissions.length?done/submissions.length*100:0)+'%';}
+document.querySelectorAll('.daybtn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.daybtn').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.day').forEach(x=>x.classList.toggle('active',x.id==='day'+btn.dataset.day));}));
+document.addEventListener('change',e=>{if(e.target.matches('input[type=checkbox]')){localStorage.setItem(e.target.dataset.id,e.target.checked?'1':'0');update();}});
+update();
+</script></body></html>
