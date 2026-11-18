@@ -83,7 +83,7 @@ exams.forEach((d,di)=>{
   const n=s.exercises?s.exercises.length:s.items.length;
   card.innerHTML=`<div class="cardtop"><h3>${s.name}</h3><span class="tag">${s.exercises?'演習対象 '+n+'問':n+'項目'}</span></div>`;
   if(s.exercises){
-   const scopeTitle=document.createElement('p');scopeTitle.className='exercise-note';scopeTitle.textContent='試験範囲（ODS記載）';card.appendChild(scopeTitle);
+   const scopeTitle=document.createElement('p');scopeTitle.className='exercise-note';scopeTitle.textContent='試験範囲';card.appendChild(scopeTitle);
    s.items.forEach((it,ii)=>{
     const id=`exam-${di}-${s.name}-range-${ii}`;
     const row=document.createElement('label');row.className='item';
